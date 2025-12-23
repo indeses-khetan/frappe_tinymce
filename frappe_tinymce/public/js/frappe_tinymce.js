@@ -1,4 +1,4 @@
-// ✅ Save original implementation FIRST
+// ✅ Preserve original Quill editor
 const OriginalControlTextEditor = frappe.ui.form.ControlTextEditor;
 
 frappe.ui.form.ControlTextEditor = class ControlTextEditor extends OriginalControlTextEditor {
@@ -8,27 +8,32 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends OriginalContr
 
         const allowed_doctypes = ["Matter", "EL Letter Template"];
 
-        // 1️⃣ System UI (Customize Form, Email Template builder internals)
-        if (!this.frm || !this.frm.doctype) {
-            return super.make_input(); // original Quill
+        // System UI + other doctypes → Quill
+        if (!this.frm || !allowed_doctypes.includes(this.frm.doctype)) {
+            return super.make_input();
         }
 
-        // 2️⃣ Other doctypes → ORIGINAL QUILL
-        if (!allowed_doctypes.includes(this.frm.doctype)) {
-            return super.make_input(); // original Quill
-        }
-
-        // 3️⃣ Allowed doctypes → TinyMCE
+        // Allowed doctypes → TinyMCE
         this.make_tinymce_editor();
     }
 
     make_tinymce_editor() {
         const that = this;
 
-        this.quill_container = $('<div>').appendTo(this.input_area);
+        // 🔒 SAFELY convert to jQuery
+        const $input_area = $(this.input_area);
+
+        // Clear only the input area
+        $input_area.empty();
+
+        // Create dedicated container
+        this.$editor_container = $('<div class="tinymce-editor"></div>')
+            .appendTo($input_area);
 
         tinymce.init({
-            target: this.input_area,
+            target: this.$editor_container[0],
+            height: 450,
+
             toolbar: 'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments addcomment | footnotes | mergetags',
             font_size_formats: '10px 11px 12px 14px 15px 16px 18px 24px 36px',
             plugins: [
@@ -45,25 +50,39 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends OriginalContr
             default_link_target: "_blank",
 
             setup(editor) {
-                that.activeEditor = editor;
+                that.editor = editor;
 
-                editor.on('init', function () {
+                editor.on('init', () => {
                     editor.setContent(that.value || "");
                 });
 
-                editor.on('Change KeyUp Undo Redo', function () {
-                    that.parse_validate_and_set_in_model(editor.getContent());
+                editor.on('change keyup', () => {
+                    const value = editor.getContent();
+
+                    that.value = value;
+
+                    if (that.frm && that.df && that.df.fieldname) {
+                        that.frm.doc[that.df.fieldname] = value;
+                        that.frm.dirty(); // ✅ THIS IS THE KEY
+                    }
                 });
             }
+
         });
     }
 
     set_formatted_input(value) {
-        if (this.activeEditor) {
-            this.activeEditor.setContent(value || "");
+        if (this.editor && value !== this.editor.getContent()) {
+            this.editor.setContent(value || "");
         } else {
             super.set_formatted_input(value);
         }
     }
+
+    get_value() {
+        if (this.editor) {
+            return this.editor.getContent();
+        }
+        return super.get_value();
+    }
 };
- 
