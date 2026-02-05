@@ -6,7 +6,7 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends OriginalContr
     make_input() {
         this.has_input = true;
 
-        const allowed_doctypes = ["Matter", "EL Letter Template", "Email Template"];
+        const allowed_doctypes = ["Matter", "EL Letter Template", "Email Template", "Job Application"];
 
         // System UI + other doctypes → Quill
         if (!this.frm || !allowed_doctypes.includes(this.frm.doctype)) {
