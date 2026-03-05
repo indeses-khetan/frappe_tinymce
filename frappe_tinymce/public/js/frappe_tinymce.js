@@ -31,6 +31,25 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends OriginalContr
             .appendTo($input_area);
 
         tinymce.init({
+
+            font_family_formats:
+                'MADE Evolve Sans, sans-serif;'+
+                'Arial=arial,helvetica,sans-serif;' +
+                'Times New Roman=times new roman,times,serif;' +
+                'Roboto=Roboto,sans-serif;' +
+                'Poppins=Poppins,sans-serif;' +
+                'Noto Sans=Noto Sans,sans-serif;' +
+                'Noto Serif=Noto Serif,serif;',
+            font_size_formats: '10px 11px 12px 14px 15px 16px 18px 24px 36px',
+            content_style: `
+                    @import url(https://db.onlinewebfonts.com/c/b02a42732540bb1927af84ae271de951?family=MADEEvolveSans);
+                    body {
+                        font-family: "MADEEvolveSans";
+                        font-size: 14px;
+                    }
+
+                    `,
+
             target: this.$editor_container[0],
             height: 450,
 
