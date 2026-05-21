@@ -6,7 +6,7 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends OriginalContr
     make_input() {
         this.has_input = true;
 
-        const allowed_doctypes = ["Matter", "EL Letter Template", "Email Template", "Job Application"];
+        const allowed_doctypes = ["Matter", "EL Letter Template", "Email Template", "Job Application", "Agreement Template"];
 
         // System UI + other doctypes → Quill
         if (!this.frm || !allowed_doctypes.includes(this.frm.doctype)) {
@@ -33,7 +33,7 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends OriginalContr
         tinymce.init({
 
             font_family_formats:
-                'MADE Evolve Sans, sans-serif;'+
+                'MADE Evolve Sans, sans-serif;' +
                 'Arial=arial,helvetica,sans-serif;' +
                 'Times New Roman=times new roman,times,serif;' +
                 'Roboto=Roboto,sans-serif;' +
@@ -56,9 +56,9 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends OriginalContr
             toolbar: 'undo redo | code | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments addcomment | footnotes | mergetags',
             font_size_formats: '10px 11px 12px 14px 15px 16px 18px 24px 36px',
             plugins: [
-              'code', 'autoresize', 'autolink', 'charmap', 'emoticons', 'fullscreen', 'help',
-              'image', 'link', 'lists', 'searchreplace',
-              'table', 'visualblocks', 'visualchars', 'wordcount', 'media', 'anchor'
+                'code', 'autoresize', 'autolink', 'charmap', 'emoticons', 'fullscreen', 'help',
+                'image', 'link', 'lists', 'searchreplace',
+                'table', 'visualblocks', 'visualchars', 'wordcount', 'media', 'anchor'
             ],
             powerpaste_googledocs_import: "prompt",
             entity_encoding: 'raw',
