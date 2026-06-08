@@ -33,7 +33,7 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends OriginalContr
         tinymce.init({
 
             font_family_formats:
-                'MADE Evolve Sans, sans-serif;' +
+                'MADEEvolveSans, sans-serif;' +
                 'Arial=arial,helvetica,sans-serif;' +
                 'Times New Roman=times new roman,times,serif;' +
                 'Roboto=Roboto,sans-serif;' +
