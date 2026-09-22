@@ -57,9 +57,40 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends OriginalContr
             font_size_formats: '10px 11px 12px 14px 15px 16px 18px 24px 36px',
             plugins: [
                 'code', 'autoresize', 'autolink', 'charmap', 'emoticons', 'fullscreen', 'help',
-                'image', 'link', 'lists', 'searchreplace',
+                'image', 'link', 'lists', 'searchreplace', 'paste', 
                 'table', 'visualblocks', 'visualchars', 'wordcount', 'media', 'anchor'
             ],
+            paste_preprocess: function(plugin, args) {
+                const div = document.createElement("div");
+                div.innerHTML = args.content;
+
+                div.querySelectorAll("*").forEach(el => {
+                    el.removeAttribute("style");
+                    el.removeAttribute("class");
+                    el.removeAttribute("face");
+                    el.removeAttribute("size");
+                    el.removeAttribute("color");
+                    el.removeAttribute("bgcolor");
+                    el.removeAttribute("align");
+                    el.removeAttribute("valign");
+                });
+
+                div.querySelectorAll("span, font").forEach(el => {
+                    el.replaceWith(...el.childNodes);
+                });
+
+                div.querySelectorAll("p, div").forEach(el => {
+                    const text = el.textContent
+                        .replace(/\u00a0/g, "")
+                        .trim();
+
+                    if (!text && !el.querySelector("img, table, br")) {
+                        el.remove();
+                    }
+                });
+
+                args.content = div.innerHTML;
+            },
             powerpaste_googledocs_import: "prompt",
             entity_encoding: 'raw',
             convert_urls: true,
@@ -88,6 +119,7 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends OriginalContr
             }
 
         });
+        
     }
 
     set_formatted_input(value) {
