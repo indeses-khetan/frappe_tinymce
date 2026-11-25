@@ -193,7 +193,7 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends OriginalContr
             // Default editor style (with fallback fonts, no blocked @import)
             content_style: `
                 body {
-                    font-family: "MADE Evolve Sans", Arial, Helvetica, sans-serif;
+                    font-family: "MADE Evolve Sans", sans-serif;
                     font-size: 14px;
                 }
             `,
